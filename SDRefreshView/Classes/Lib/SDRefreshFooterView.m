@@ -60,7 +60,7 @@
         [self setRefreshState:SDRefreshViewStateRefreshing];
     }
     
-    if (y > (self.scrollView.contentSize.height - self.scrollView.sd_height + self.sd_height + self.scrollView.contentInset.bottom) && (self.refreshState == SDRefreshViewStateNormal)) {
+    if (y > (self.scrollView.contentSize.height - self.scrollView.sd_height + self.sd_height + self.scrollView.contentInset.bottom) && (SDRefreshViewStateNormal == self.refreshState)) {
         if (self.hidden) return;
         [self setRefreshState:SDRefreshViewStateWillRefresh];
     }

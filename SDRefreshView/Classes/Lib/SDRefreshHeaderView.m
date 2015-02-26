@@ -21,6 +21,7 @@
         [self setRefreshState:SDRefreshViewStateNormal];
         
         self.scrollViewEdgeInsets = UIEdgeInsetsMake(self.frame.size.height, 0, 0, 0);
+        self.isManuallyRefreshing = YES;
     }
     return self;
 }
@@ -40,31 +41,35 @@
 {
     [super layoutSubviews];
     
-    
-    
-//    if (self.isManuallyRefreshing && SDRefreshViewMethodIOS7) {
-//        self.scrollView.contentInset = [self syntheticalEdgeInsetsWithEdgeInsets:self.scrollViewEdgeInsets];
-//        if (self.isEffectedByNavigationController) {
-//            self.scrollView.contentOffset = CGPointMake(0, -(self.sd_y + 64 + self.scrollView.contentInset.top));
-//        } else {
-//            self.scrollView.contentOffset = CGPointMake(0, -(self.sd_y + self.scrollView.contentInset.top));
+//    if (self.isManuallyRefreshing) {
+//        
+//        self.scrollView.contentOffset = CGPointMake(0, -(self.sd_height + self.scrollView.contentInset.top));
+//        
+//        NSLog(@"---offset--(%@)--top(%f)", NSStringFromCGPoint(self.scrollView.contentOffset), self.scrollView.contentInset.top);
+//        
+//        if (SDRefreshViewMethodIOS7 && self.isEffectedByNavigationController) {
+//            // 加入自定义的inset
+//            //self.originalEdgeInsets = [self syntheticalEdgeInsetsWithEdgeInsets:self.scrollView.contentInset];
+//            
+//            // 加入navigationBar高度增加的inset
+//            self.originalEdgeInsets = [self syntheticalEdgeInsetsWithEdgeInsets:UIEdgeInsetsMake(64 , 0, 0, 0)];
+//            
+//            NSLog(@"--insets--(%@)", NSStringFromUIEdgeInsets(self.originalEdgeInsets));
 //        }
 //    }
     
-    if (self.isManuallyRefreshing) {
-        self.originalEdgeInsets = UIEdgeInsetsMake(64 , 0, 0, 0);
-        self.scrollView.contentOffset = CGPointMake(0, -(self.sd_height + self.scrollView.contentInset.top));
-        NSLog(@"--off--(%@)", NSStringFromCGPoint(self.scrollView.contentOffset));
-    }
-    
     self.center = CGPointMake(self.scrollView.sd_width * 0.5, [self yOfCenterPoint]);
     
-//    if (self.isManuallyRefreshing) {
-//        self.sd_y += self.scrollViewEdgeInsets.top;
-//    }
-    
-    NSLog(@"--h(%f)--top-(%f)", self.sd_height, self.scrollView.contentInset.top);
-    NSLog(@"--lay--center-(%@)", NSStringFromCGPoint(self.center));
+     NSLog(@"----lay---(%@)", NSStringFromUIEdgeInsets(self.scrollView.contentInset));
+    if (self.isManuallyRefreshing) {
+        [self setRefreshState:SDRefreshViewStateRefreshing];
+        self.isManuallyRefreshing = NO;
+    }
+}
+
+- (void)didMoveToSuperview
+{
+    NSLog(@"----load---(%@)", NSStringFromUIEdgeInsets(self.scrollView.contentInset));
 }
 
 - (void)beginRefreshing
@@ -78,6 +83,8 @@
     if (![keyPath isEqualToString:SDRefreshViewObservingkeyPath]) return;
     
     CGFloat y = [change[@"new"] CGPointValue].y;
+    
+    // 只有在 y<=0 以及 scrollview的高度不为0 时才判断
     if ((y > 0) || (self.scrollView.bounds.size.height == 0)) return;
     
     if (y >= (-self.sd_height - self.scrollView.contentInset.top) && (self.refreshState == SDRefreshViewStateWillRefresh)) {
@@ -88,7 +95,8 @@
         [self setRefreshState:SDRefreshViewStateWillRefresh];
     }
     
-    NSLog(@"----(%f)-", y);
+    NSLog(@"---yyy--(%f)", y);
+
 }
 
 @end

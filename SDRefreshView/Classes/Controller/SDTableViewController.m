@@ -27,7 +27,6 @@
         self.tableView.rowHeight = 60.0f;
         self.tableView.separatorColor = [UIColor whiteColor];
         _totalRowCount = 3;
-        self.tableView.contentInset = UIEdgeInsetsMake(0, 0, 0, 0);
     }
     return self;
 }
@@ -35,7 +34,9 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-
+    
+    self.tableView.contentInset = UIEdgeInsetsMake(50, 0, 80, 0);
+    
     SDRefreshHeaderView *refreshHeader = [[SDRefreshHeaderView alloc] init];
     [refreshHeader addToScrollView:self.tableView isEffectedByNavigationController:YES];
     __weak SDRefreshHeaderView *weakRefreshHeader = refreshHeader;
@@ -46,7 +47,7 @@
             [weakRefreshHeader endRefreshing];
         });
     };
-    [refreshHeader beginRefreshing];
+    //[refreshHeader beginRefreshing];
     
     SDRefreshFooterView *refreshFooter = [[SDRefreshFooterView alloc] init];
     [refreshFooter addToScrollView:self.tableView isEffectedByNavigationController:YES];
@@ -54,6 +55,8 @@
     _refreshFooter = refreshFooter;
     
     //[refreshHeader beginRefreshing];
+    
+    
 }
 
 

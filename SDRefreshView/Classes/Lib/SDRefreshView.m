@@ -114,10 +114,9 @@
         case SDRefreshViewStateRefreshing:
             {
                 _originalEdgeInsets = self.scrollView.contentInset;
-//                if (self.isManuallyRefreshing && SDRefreshViewMethodIOS7 && self.isEffectedByNavigationController) {
-//                    _originalEdgeInsets = [self syntheticalEdgeInsetsWithEdgeInsets:UIEdgeInsetsMake(64 , 0, 0, 0)];
-//                }
-               
+                
+                NSLog(@"---ori---(%@)", NSStringFromUIEdgeInsets(self.scrollView.contentInset));
+
                 _scrollView.contentInset = [self syntheticalEdgeInsetsWithEdgeInsets:self.scrollViewEdgeInsets];
 
                 _stateIndicatorView.hidden = YES;
@@ -166,11 +165,12 @@
 {
     [UIView animateWithDuration:0.6 animations:^{
         _scrollView.contentInset = _originalEdgeInsets;
+        
     } completion:^(BOOL finished) {
-        [self setRefreshState:SDRefreshViewStateNormal];
         if (self.isManuallyRefreshing) {
             _isManuallyRefreshing = NO;
         }
+        [self setRefreshState:SDRefreshViewStateNormal];
     }];
 }
 
