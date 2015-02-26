@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		998B1BD71A9DC19200788E78 /* sdRefeshView_arrow@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 998B1BD61A9DC19200788E78 /* sdRefeshView_arrow@2x.png */; };
 		99B80F4A1A99D16E00FE8FD4 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 99B80F491A99D16E00FE8FD4 /* Foundation.framework */; };
 		99B80F4C1A99D16E00FE8FD4 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 99B80F4B1A99D16E00FE8FD4 /* CoreGraphics.framework */; };
 		99B80F4E1A99D16E00FE8FD4 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 99B80F4D1A99D16E00FE8FD4 /* UIKit.framework */; };
@@ -23,6 +24,7 @@
 		99B80F811A99D8FA00FE8FD4 /* SDRefreshView.m in Sources */ = {isa = PBXBuildFile; fileRef = 99B80F801A99D8FA00FE8FD4 /* SDRefreshView.m */; };
 		99B80F841A99D94B00FE8FD4 /* SDRefreshHeaderView.m in Sources */ = {isa = PBXBuildFile; fileRef = 99B80F831A99D94B00FE8FD4 /* SDRefreshHeaderView.m */; };
 		99E266971A9AF21900B01D55 /* UIView+SDExtension.m in Sources */ = {isa = PBXBuildFile; fileRef = 99E266961A9AF21900B01D55 /* UIView+SDExtension.m */; };
+		99E266A21A9B644400B01D55 /* SDRefreshFooterView.m in Sources */ = {isa = PBXBuildFile; fileRef = 99E266A11A9B644400B01D55 /* SDRefreshFooterView.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -36,6 +38,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		998B1BD61A9DC19200788E78 /* sdRefeshView_arrow@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "sdRefeshView_arrow@2x.png"; sourceTree = "<group>"; };
 		99B80F461A99D16E00FE8FD4 /* SDRefreshView.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SDRefreshView.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		99B80F491A99D16E00FE8FD4 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		99B80F4B1A99D16E00FE8FD4 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -60,6 +63,8 @@
 		99B80F831A99D94B00FE8FD4 /* SDRefreshHeaderView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SDRefreshHeaderView.m; sourceTree = "<group>"; };
 		99E266951A9AF21900B01D55 /* UIView+SDExtension.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+SDExtension.h"; sourceTree = "<group>"; };
 		99E266961A9AF21900B01D55 /* UIView+SDExtension.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+SDExtension.m"; sourceTree = "<group>"; };
+		99E266A01A9B644400B01D55 /* SDRefreshFooterView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SDRefreshFooterView.h; sourceTree = "<group>"; };
+		99E266A11A9B644400B01D55 /* SDRefreshFooterView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SDRefreshFooterView.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -173,12 +178,15 @@
 		99B80F791A99D1B900FE8FD4 /* Lib */ = {
 			isa = PBXGroup;
 			children = (
+				998B1BD61A9DC19200788E78 /* sdRefeshView_arrow@2x.png */,
 				99B80F7F1A99D8FA00FE8FD4 /* SDRefreshView.h */,
 				99B80F801A99D8FA00FE8FD4 /* SDRefreshView.m */,
 				99B80F821A99D94B00FE8FD4 /* SDRefreshHeaderView.h */,
 				99B80F831A99D94B00FE8FD4 /* SDRefreshHeaderView.m */,
 				99E266951A9AF21900B01D55 /* UIView+SDExtension.h */,
 				99E266961A9AF21900B01D55 /* UIView+SDExtension.m */,
+				99E266A01A9B644400B01D55 /* SDRefreshFooterView.h */,
+				99E266A11A9B644400B01D55 /* SDRefreshFooterView.m */,
 			);
 			name = Lib;
 			path = Classes/Lib;
@@ -276,6 +284,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				998B1BD71A9DC19200788E78 /* sdRefeshView_arrow@2x.png in Resources */,
 				99B80F541A99D16E00FE8FD4 /* InfoPlist.strings in Resources */,
 				99B80F5C1A99D16E00FE8FD4 /* Images.xcassets in Resources */,
 			);
@@ -301,6 +310,7 @@
 				99B80F561A99D16E00FE8FD4 /* main.m in Sources */,
 				99B80F5A1A99D16E00FE8FD4 /* SDAppDelegate.m in Sources */,
 				99B80F841A99D94B00FE8FD4 /* SDRefreshHeaderView.m in Sources */,
+				99E266A21A9B644400B01D55 /* SDRefreshFooterView.m in Sources */,
 				99B80F811A99D8FA00FE8FD4 /* SDRefreshView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -421,7 +431,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "SDRefreshView/SDRefreshView-Prefix.pch";
 				INFOPLIST_FILE = "SDRefreshView/SDRefreshView-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 6.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = app;
 			};
@@ -435,7 +445,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "SDRefreshView/SDRefreshView-Prefix.pch";
 				INFOPLIST_FILE = "SDRefreshView/SDRefreshView-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 6.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = app;
 			};

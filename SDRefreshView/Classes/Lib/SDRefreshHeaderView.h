@@ -10,4 +10,6 @@
 
 @interface SDRefreshHeaderView : SDRefreshView
 
+- (void)beginRefreshing;
+
 @end

@@ -22,6 +22,18 @@
     self.frame = temp;
 }
 
+- (CGFloat)sd_width
+{
+    return self.frame.size.width;
+}
+
+- (void)setSd_width:(CGFloat)sd_width
+{
+    CGRect temp = self.frame;
+    temp.size.width = sd_width;
+    self.frame = temp;
+}
+
 
 - (CGFloat)sd_y
 {

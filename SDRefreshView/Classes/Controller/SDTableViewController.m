@@ -8,8 +8,12 @@
 
 #import "SDTableViewController.h"
 #import "SDRefreshHeaderView.h"
+#import "SDRefreshFooterView.h"
 
 @interface SDTableViewController ()
+
+@property (nonatomic, weak) SDRefreshFooterView *refreshFooter;
+@property (nonatomic, assign) NSInteger totalRowCount;
 
 @end
 
@@ -19,7 +23,11 @@
 {
     self = [super initWithStyle:style];
     if (self) {
-        // Custom initialization
+        self.title = @"上拉和下拉刷新";
+        self.tableView.rowHeight = 60.0f;
+        self.tableView.separatorColor = [UIColor whiteColor];
+        _totalRowCount = 3;
+        self.tableView.contentInset = UIEdgeInsetsMake(0, 0, 0, 0);
     }
     return self;
 }
@@ -27,32 +35,43 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    UIView *header = [[UIView alloc] init];
-    header.frame = CGRectMake(0, 0, 320, 100);
-    header.backgroundColor = [UIColor redColor];
-    self.tableView.tableHeaderView = header;
-//    self.refreshControl.tintColor = [UIColor blueColor];
-//    NSLog(@"---refresh---%@", self.refreshControl);
-//    
-//    UIRefreshControl *refresh = [[UIRefreshControl alloc] init];
-//    refresh.tintColor = [UIColor greenColor];
-//    [self.view addSubview:refresh];
-//    
-//     NSLog(@"---refresh---%@", self.refreshControl);
-    [[[SDRefreshHeaderView alloc] init] addToScrollView:self.tableView];
+
+    SDRefreshHeaderView *refreshHeader = [[SDRefreshHeaderView alloc] init];
+    [refreshHeader addToScrollView:self.tableView isEffectedByNavigationController:YES];
+    __weak SDRefreshHeaderView *weakRefreshHeader = refreshHeader;
+    refreshHeader.beginRefreshingOperation = ^{
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            self.totalRowCount += 2;
+            [self.tableView reloadData];
+            [weakRefreshHeader endRefreshing];
+        });
+    };
+    [refreshHeader beginRefreshing];
+    
+    SDRefreshFooterView *refreshFooter = [[SDRefreshFooterView alloc] init];
+    [refreshFooter addToScrollView:self.tableView isEffectedByNavigationController:YES];
+    [refreshFooter addTarget:self refreshAction:@selector(footerRefresh)];
+    _refreshFooter = refreshFooter;
+    
+    //[refreshHeader beginRefreshing];
 }
 
-- (void)didReceiveMemoryWarning
+
+
+- (void)footerRefresh
 {
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        self.totalRowCount += 2;
+        [self.tableView reloadData];
+        [self.refreshFooter endRefreshing];
+    });
 }
 
 #pragma mark - Table view data source
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return 10;
+    return self.totalRowCount;
 }
 
 
@@ -63,62 +82,23 @@
     
     if (cell == nil) {
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:ID];
+        cell.backgroundView = nil;
+        cell.textLabel.textColor = [UIColor colorWithWhite:1.0f alpha:0.95f];
     }
     
-    cell.textLabel.text = @"-------wwww--------";
-    
+    cell.backgroundColor = [self randomColor];
+    cell.textLabel.text = [NSString stringWithFormat:@"------第%d行--共%d行----", indexPath.row + 1, self.totalRowCount];
     
     return cell;
 }
 
-
-/*
-// Override to support conditional editing of the table view.
-- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
+- (UIColor *)randomColor
 {
-    // Return NO if you do not want the specified item to be editable.
-    return YES;
+    CGFloat r = arc4random_uniform(255);
+    CGFloat g = arc4random_uniform(255);
+    CGFloat b = arc4random_uniform(255);
+    
+    return [UIColor colorWithRed:(r / 255.0) green:(g / 255.0) blue:(b / 255.0) alpha:0.25f];
 }
-*/
-
-/*
-// Override to support editing the table view.
-- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    if (editingStyle == UITableViewCellEditingStyleDelete) {
-        // Delete the row from the data source
-        [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
-    } else if (editingStyle == UITableViewCellEditingStyleInsert) {
-        // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
-    }   
-}
-*/
-
-/*
-// Override to support rearranging the table view.
-- (void)tableView:(UITableView *)tableView moveRowAtIndexPath:(NSIndexPath *)fromIndexPath toIndexPath:(NSIndexPath *)toIndexPath
-{
-}
-*/
-
-/*
-// Override to support conditional rearranging of the table view.
-- (BOOL)tableView:(UITableView *)tableView canMoveRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    // Return NO if you do not want the item to be re-orderable.
-    return YES;
-}
-*/
-
-/*
-#pragma mark - Navigation
-
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
-{
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
-}
-*/
 
 @end
