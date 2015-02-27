@@ -7,11 +7,11 @@
 
 2.创建并设置 （只需3步）
     
-    SDRefreshHeaderView *refreshHeader = [SDRefreshHeaderView refreshView];
+    （1）SDRefreshHeaderView *refreshHeader = [SDRefreshHeaderView refreshView];
     
-    [refreshHeader addToScrollView:目标tableview]; // 加入到目标tableview
+    （2）[refreshHeader addToScrollView:目标tableview];  //加入到目标tableview，默认是在navigationController环境下，如果不是在此环境下，请设置 refreshHeader.isEffectedByNavigationController = NO;
     
-    [refreshHeader addTarget: refreshAction:加载内容的方法] 或者 refreshHeader.beginRefreshingOperation = ^{} 任选其中一种即可
+    （3）[refreshHeader addTarget: refreshAction:加载内容的方法] 或者 refreshHeader.beginRefreshingOperation = ^{} 任选其中一种即可
     
 ----------------------------------------------------------------------------------------------------------------
   PS： 
