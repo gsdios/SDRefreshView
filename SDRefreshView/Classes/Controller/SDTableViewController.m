@@ -6,9 +6,21 @@
 //  Copyright (c) 2015年 GSD. All rights reserved.
 //
 
+/**
+ 
+ *******************************************************
+ *                                                      *
+ * 感谢您的支持， 如果下载的代码在使用过程中出现BUG或者其他问题    *
+ * 您可以发邮件到gsdios@126.com 或者 到                       *
+ * https://github.com/gsdios?tab=repositories 提交问题     *
+ *                                                      *
+ *******************************************************
+ 
+ */
+
+
 #import "SDTableViewController.h"
-#import "SDRefreshHeaderView.h"
-#import "SDRefreshFooterView.h"
+#import "SDRefresh.h"
 
 @interface SDTableViewController ()
 
@@ -26,6 +38,7 @@
         self.title = @"上拉和下拉刷新";
         self.tableView.rowHeight = 60.0f;
         self.tableView.separatorColor = [UIColor whiteColor];
+        // 模拟数据
         _totalRowCount = 3;
     }
     return self;
@@ -35,28 +48,22 @@
 {
     [super viewDidLoad];
     
-    self.tableView.contentInset = UIEdgeInsetsMake(50, 0, 80, 0);
-    
-    SDRefreshHeaderView *refreshHeader = [[SDRefreshHeaderView alloc] init];
-    [refreshHeader addToScrollView:self.tableView isEffectedByNavigationController:YES];
+    SDRefreshHeaderView *refreshHeader = [SDRefreshHeaderView refreshView];
+    [refreshHeader addToScrollView:self.tableView];
     __weak SDRefreshHeaderView *weakRefreshHeader = refreshHeader;
     refreshHeader.beginRefreshingOperation = ^{
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-            self.totalRowCount += 2;
+            self.totalRowCount += 3;
             [self.tableView reloadData];
             [weakRefreshHeader endRefreshing];
         });
     };
-    //[refreshHeader beginRefreshing];
+    [refreshHeader beginRefreshing];
     
-    SDRefreshFooterView *refreshFooter = [[SDRefreshFooterView alloc] init];
-    [refreshFooter addToScrollView:self.tableView isEffectedByNavigationController:YES];
+    SDRefreshFooterView *refreshFooter = [SDRefreshFooterView refreshView];
+    [refreshFooter addToScrollView:self.tableView];
     [refreshFooter addTarget:self refreshAction:@selector(footerRefresh)];
     _refreshFooter = refreshFooter;
-    
-    //[refreshHeader beginRefreshing];
-    
-    
 }
 
 
@@ -101,7 +108,7 @@
     CGFloat g = arc4random_uniform(255);
     CGFloat b = arc4random_uniform(255);
     
-    return [UIColor colorWithRed:(r / 255.0) green:(g / 255.0) blue:(b / 255.0) alpha:0.25f];
+    return [UIColor colorWithRed:(r / 255.0) green:(g / 255.0) blue:(b / 255.0) alpha:0.3f];
 }
 
 @end

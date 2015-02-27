@@ -6,9 +6,24 @@
 //  Copyright (c) 2015年 GSD. All rights reserved.
 //
 
+/**
+ 
+ *******************************************************
+ *                                                      *
+ * 感谢您的支持， 如果下载的代码在使用过程中出现BUG或者其他问题    *
+ * 您可以发邮件到gsdios@126.com 或者 到                       *
+ * https://github.com/gsdios?tab=repositories 提交问题     *
+ *                                                      *
+ *******************************************************
+ 
+ */
 #import "SDRefreshView.h"
 #import "UIView+SDExtension.h"
 
+CGFloat const SDRefreshViewDefaultHeight = 70.0f;
+CGFloat const SDActivityIndicatorViewMargin = 50.0f;
+CGFloat const SDTextIndicatorMargin = 20.0f;
+CGFloat const SDTimeIndicatorMargin = 10.0f;
 
 @implementation SDRefreshView
 {
@@ -17,6 +32,8 @@
     UILabel *_timeIndicator;
     UIActivityIndicatorView *_activityIndicatorView;
     NSString *_lastRefreshingTimeString;
+    // 记录原始contentEdgeInsets
+    UIEdgeInsets _originalEdgeInsets;
 }
 
 - (id)initWithFrame:(CGRect)frame
@@ -24,20 +41,20 @@
     self = [super initWithFrame:frame];
     if (self) {
         
-        self.bounds = CGRectMake(0, 0, 320, 80);
-        
         UIActivityIndicatorView *activity = [[UIActivityIndicatorView alloc] init];
         activity.activityIndicatorViewStyle = UIActivityIndicatorViewStyleGray;
         [activity startAnimating];
         [self addSubview:activity];
         _activityIndicatorView = activity;
         
+        // 状态提示图片
         UIImageView *stateIndicator = [[UIImageView alloc] init];
         stateIndicator.image = [UIImage imageNamed:@"sdRefeshView_arrow"];
         [self addSubview:stateIndicator];
         _stateIndicatorView = stateIndicator;
         _stateIndicatorView.bounds = CGRectMake(0, 0, 15, 40);
         
+        // 状态提示label
         UILabel *textIndicator = [[UILabel alloc] init];
         textIndicator.bounds = CGRectMake(0, 0, 300, 30);
         textIndicator.textAlignment = NSTextAlignmentCenter;
@@ -47,6 +64,7 @@
         [self addSubview:textIndicator];
         _textIndicator = textIndicator;
         
+        // 更新时间提示label
         UILabel *timeIndicator = [[UILabel alloc] init];
         timeIndicator.bounds = CGRectMake(0, 0, 160, 16);;
         timeIndicator.textAlignment = NSTextAlignmentCenter;
@@ -58,16 +76,26 @@
     return self;
 }
 
++ (instancetype)refreshView
+{
+    return [[self alloc] init];
+}
+
+- (void)didMoveToSuperview
+{
+    self.bounds = CGRectMake(0, 0, self.scrollView.frame.size.width, SDRefreshViewDefaultHeight);
+}
+
 - (void)layoutSubviews
 {
     [super layoutSubviews];
     
     _activityIndicatorView.hidden = !_isManuallyRefreshing;
-    _activityIndicatorView.center = CGPointMake(50, self.sd_height * 0.5);
+    _activityIndicatorView.center = CGPointMake(SDActivityIndicatorViewMargin, self.sd_height * 0.5);
     _stateIndicatorView.center = _activityIndicatorView.center;
     
-    _textIndicator.center = CGPointMake(self.sd_width * 0.5, _activityIndicatorView.sd_height * 0.5 + 30);
-    _timeIndicator.center = CGPointMake(self.sd_width * 0.5, self.sd_height - _timeIndicator.sd_height * 0.5 - 20);
+    _textIndicator.center = CGPointMake(self.sd_width * 0.5, _activityIndicatorView.sd_height * 0.5 + SDTextIndicatorMargin);
+    _timeIndicator.center = CGPointMake(self.sd_width * 0.5, self.sd_height - _timeIndicator.sd_height * 0.5 - SDTimeIndicatorMargin);
 }
 
 - (NSString *)lastRefreshingTimeString
@@ -84,6 +112,9 @@
     
     [_scrollView addSubview:self];
     [_scrollView addObserver:self forKeyPath:SDRefreshViewObservingkeyPath options:NSKeyValueObservingOptionNew context:nil];
+    
+    // 默认是在NavigationController控制下，否则可以调用addToScrollView:isEffectedByNavigationController:(设值为NO) 即可
+    _isEffectedByNavigationController = YES;
 }
 
 - (void)addToScrollView:(UIScrollView *)scrollView isEffectedByNavigationController:(BOOL)effectedByNavigationController
@@ -100,7 +131,7 @@
 }
 
 
-
+// 获得在scrollView的contentInset原来基础上增加一定值之后的新contentInset
 - (UIEdgeInsets)syntheticalEdgeInsetsWithEdgeInsets:(UIEdgeInsets)edgeInsets
 {
     return UIEdgeInsetsMake(_originalEdgeInsets.top + edgeInsets.top, _originalEdgeInsets.left + edgeInsets.left, _originalEdgeInsets.bottom + edgeInsets.bottom, _originalEdgeInsets.right + edgeInsets.right);
@@ -111,18 +142,17 @@
     _refreshState = refreshState;
     
     switch (refreshState) {
+        // 进入刷新状态
         case SDRefreshViewStateRefreshing:
             {
                 _originalEdgeInsets = self.scrollView.contentInset;
-                
-                NSLog(@"---ori---(%@)", NSStringFromUIEdgeInsets(self.scrollView.contentInset));
 
                 _scrollView.contentInset = [self syntheticalEdgeInsetsWithEdgeInsets:self.scrollViewEdgeInsets];
 
                 _stateIndicatorView.hidden = YES;
                 _activityIndicatorView.hidden = NO;
                 _lastRefreshingTimeString = [self refreshingTimeString];
-                _textIndicator.text = @"正在加载最新数据,请稍候";
+                _textIndicator.text = SDRefreshViewRefreshingStateText;
                 
                 if (self.beginRefreshingOperation) {
                     self.beginRefreshingOperation();
@@ -140,7 +170,7 @@
             
         case SDRefreshViewStateWillRefresh:
             {
-                _textIndicator.text = @"松开即可加载最新数据";
+                _textIndicator.text = SDRefreshViewWillRefreshStateText;
                 [UIView animateWithDuration:0.5 animations:^{
                     _stateIndicatorView.transform = CGAffineTransformMakeRotation(self.stateIndicatorViewWillRefreshStateTransformAngle);
                 }];
@@ -148,7 +178,7 @@
             break;
             
         case SDRefreshViewStateNormal:
-            _textIndicator.text = self.textForPullingState;
+            _textIndicator.text = self.textForNormalState;
             _stateIndicatorView.transform = CGAffineTransformMakeRotation(self.stateIndicatorViewNormalTransformAngle);
             _timeIndicator.text = [NSString stringWithFormat:@"最后更新：%@", [self lastRefreshingTimeString]];
             _stateIndicatorView.hidden = NO;
@@ -165,15 +195,12 @@
 {
     [UIView animateWithDuration:0.6 animations:^{
         _scrollView.contentInset = _originalEdgeInsets;
-        
     } completion:^(BOOL finished) {
-        if (self.isManuallyRefreshing) {
-            _isManuallyRefreshing = NO;
-        }
         [self setRefreshState:SDRefreshViewStateNormal];
     }];
 }
 
+// 更新时间
 - (NSString *)refreshingTimeString
 {
     NSDate *date = [NSDate date];
@@ -182,6 +209,7 @@
     return [formatter stringFromDate:date];
 }
 
+// 保留！
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
 {
     ;
@@ -189,7 +217,7 @@
 
 - (void)dealloc
 {
-    [_scrollView removeObserver:self forKeyPath:@"contentOffset"];
+    [_scrollView removeObserver:self forKeyPath:SDRefreshViewObservingkeyPath];
 }
 
 @end

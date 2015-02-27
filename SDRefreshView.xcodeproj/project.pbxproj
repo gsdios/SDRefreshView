@@ -38,6 +38,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		990C3CE01A9F8A6500A97F01 /* SDRefresh.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SDRefresh.h; sourceTree = "<group>"; };
 		998B1BD61A9DC19200788E78 /* sdRefeshView_arrow@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "sdRefeshView_arrow@2x.png"; sourceTree = "<group>"; };
 		99B80F461A99D16E00FE8FD4 /* SDRefreshView.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SDRefreshView.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		99B80F491A99D16E00FE8FD4 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -187,6 +188,7 @@
 				99E266961A9AF21900B01D55 /* UIView+SDExtension.m */,
 				99E266A01A9B644400B01D55 /* SDRefreshFooterView.h */,
 				99E266A11A9B644400B01D55 /* SDRefreshFooterView.m */,
+				990C3CE01A9F8A6500A97F01 /* SDRefresh.h */,
 			);
 			name = Lib;
 			path = Classes/Lib;

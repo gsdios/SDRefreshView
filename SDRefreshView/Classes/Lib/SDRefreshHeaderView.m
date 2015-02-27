@@ -6,6 +6,19 @@
 //  Copyright (c) 2015年 GSD. All rights reserved.
 //
 
+/**
+ 
+ *******************************************************
+ *                                                      *
+ * 感谢您的支持， 如果下载的代码在使用过程中出现BUG或者其他问题    *
+ * 您可以发邮件到gsdios@126.com 或者 到                       *
+ * https://github.com/gsdios?tab=repositories 提交问题     *
+ *                                                      *
+ *******************************************************
+ 
+ */
+
+
 #import "SDRefreshHeaderView.h"
 #import "UIView+SDExtension.h"
 
@@ -15,67 +28,45 @@
 {
     self = [super initWithFrame:frame];
     if (self) {
-        self.textForPullingState = @"下拉可以加载最新数据";
+        self.textForNormalState = @"下拉可以加载最新数据";
         self.stateIndicatorViewNormalTransformAngle = 0;
         self.stateIndicatorViewWillRefreshStateTransformAngle = M_PI;
         [self setRefreshState:SDRefreshViewStateNormal];
-        
-        self.scrollViewEdgeInsets = UIEdgeInsetsMake(self.frame.size.height, 0, 0, 0);
-        self.isManuallyRefreshing = YES;
     }
     return self;
 }
 
 - (CGFloat)yOfCenterPoint
 {
-    if (self.isEffectedByNavigationController) {
-        if (SDRefreshViewMethodIOS7) {
-            return - (self.sd_height * 0.5 + self.scrollView.contentInset.top - 64);
-        }
+    if (self.isEffectedByNavigationController && SDRefreshViewMethodIOS7) {
+        return - (self.sd_height * 0.5 + self.scrollView.contentInset.top - SDKNavigationBarHeight);
     }
     
     return - (self.sd_height * 0.5 + self.scrollView.contentInset.top);
+}
+
+- (void)didMoveToSuperview
+{
+    [super didMoveToSuperview];
+    self.scrollViewEdgeInsets = UIEdgeInsetsMake(self.frame.size.height, 0, 0, 0);
 }
 
 - (void)layoutSubviews
 {
     [super layoutSubviews];
     
-//    if (self.isManuallyRefreshing) {
-//        
-//        self.scrollView.contentOffset = CGPointMake(0, -(self.sd_height + self.scrollView.contentInset.top));
-//        
-//        NSLog(@"---offset--(%@)--top(%f)", NSStringFromCGPoint(self.scrollView.contentOffset), self.scrollView.contentInset.top);
-//        
-//        if (SDRefreshViewMethodIOS7 && self.isEffectedByNavigationController) {
-//            // 加入自定义的inset
-//            //self.originalEdgeInsets = [self syntheticalEdgeInsetsWithEdgeInsets:self.scrollView.contentInset];
-//            
-//            // 加入navigationBar高度增加的inset
-//            self.originalEdgeInsets = [self syntheticalEdgeInsetsWithEdgeInsets:UIEdgeInsetsMake(64 , 0, 0, 0)];
-//            
-//            NSLog(@"--insets--(%@)", NSStringFromUIEdgeInsets(self.originalEdgeInsets));
-//        }
-//    }
-    
     self.center = CGPointMake(self.scrollView.sd_width * 0.5, [self yOfCenterPoint]);
     
-     NSLog(@"----lay---(%@)", NSStringFromUIEdgeInsets(self.scrollView.contentInset));
+    // 手动刷新
     if (self.isManuallyRefreshing) {
         [self setRefreshState:SDRefreshViewStateRefreshing];
         self.isManuallyRefreshing = NO;
     }
 }
 
-- (void)didMoveToSuperview
-{
-    NSLog(@"----load---(%@)", NSStringFromUIEdgeInsets(self.scrollView.contentInset));
-}
-
 - (void)beginRefreshing
 {
     self.isManuallyRefreshing = YES;
-    [self setRefreshState:SDRefreshViewStateRefreshing];
 }
 
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
@@ -87,16 +78,15 @@
     // 只有在 y<=0 以及 scrollview的高度不为0 时才判断
     if ((y > 0) || (self.scrollView.bounds.size.height == 0)) return;
     
+    // 触发SDRefreshViewStateRefreshing状态
     if (y >= (-self.sd_height - self.scrollView.contentInset.top) && (self.refreshState == SDRefreshViewStateWillRefresh)) {
         [self setRefreshState:SDRefreshViewStateRefreshing];
     }
     
+    // 触发SDRefreshViewStateWillRefresh状态
     if (y < (-self.sd_height - self.scrollView.contentInset.top) && (SDRefreshViewStateNormal == self.refreshState)) {
         [self setRefreshState:SDRefreshViewStateWillRefresh];
     }
-    
-    NSLog(@"---yyy--(%f)", y);
-
 }
 
 @end
