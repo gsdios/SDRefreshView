@@ -48,8 +48,18 @@
 {
     [super viewDidLoad];
     
+    [self setupHeader];
+    [self setupFooter];
+}
+
+
+- (void)setupHeader
+{
     SDRefreshHeaderView *refreshHeader = [SDRefreshHeaderView refreshView];
+    
+    // 默认是在navigationController环境下，如果不是在此环境下，请设置 refreshHeader.isEffectedByNavigationController = NO;
     [refreshHeader addToScrollView:self.tableView];
+    
     __weak SDRefreshHeaderView *weakRefreshHeader = refreshHeader;
     refreshHeader.beginRefreshingOperation = ^{
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
@@ -58,14 +68,18 @@
             [weakRefreshHeader endRefreshing];
         });
     };
-    [refreshHeader beginRefreshing];
     
+    // 进入页面自动加载一次数据
+    [refreshHeader beginRefreshing];
+}
+
+- (void)setupFooter
+{
     SDRefreshFooterView *refreshFooter = [SDRefreshFooterView refreshView];
     [refreshFooter addToScrollView:self.tableView];
     [refreshFooter addTarget:self refreshAction:@selector(footerRefresh)];
     _refreshFooter = refreshFooter;
 }
-
 
 
 - (void)footerRefresh
