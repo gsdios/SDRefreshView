@@ -1,6 +1,11 @@
 # SDRefreshView
+
+ ![](http://cc.cocimg.com/bbs/attachment/Fid_19/19_441660_d132ac6db15bcac.gif)
+
+
 简单易用的上拉和下拉刷新（多版本细节适配）
-  ![](http://cc.cocimg.com/bbs/attachment/Fid_19/19_441660_d132ac6db15bcac.gif)
+
+  
 1.导入主头文件
 
     #import "SDRefresh.h"
