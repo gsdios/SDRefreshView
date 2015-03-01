@@ -19,7 +19,5 @@
   2. 如果需要一进入就自动加载一次数据，请调用[refreshHeader beginRefreshing];
   3. 默认是在navigationController环境下，如果不是在此环境下，请设置 refreshHeader.isEffectedByNavigationController = NO;
    
-   
-
   ![](http://cc.cocimg.com/bbs/attachment/Fid_19/19_441660_d132ac6db15bcac.gif)
     
