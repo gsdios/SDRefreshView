@@ -62,6 +62,7 @@
     
     // 手动刷新
     if (_isManuallyRefreshing) {
+        self.activityIndicatorView.hidden = NO;
         
         // 模拟下拉操作
         CGPoint temp = self.scrollView.contentOffset;

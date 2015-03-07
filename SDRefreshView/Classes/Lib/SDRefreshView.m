@@ -86,7 +86,7 @@ CGFloat const SDTimeIndicatorMargin = 10.0f;
 - (void)layoutSubviews
 {
     [super layoutSubviews];
-    
+
     _activityIndicatorView.center = CGPointMake(SDActivityIndicatorViewMargin, self.sd_height * 0.5);
     _stateIndicatorView.center = _activityIndicatorView.center;
     
