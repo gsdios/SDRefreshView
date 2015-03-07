@@ -30,10 +30,7 @@ CGFloat const SDTimeIndicatorMargin = 10.0f;
     UIImageView *_stateIndicatorView;
     UILabel *_textIndicator;
     UILabel *_timeIndicator;
-    UIActivityIndicatorView *_activityIndicatorView;
     NSString *_lastRefreshingTimeString;
-    // 记录原始contentEdgeInsets
-    UIEdgeInsets _originalEdgeInsets;
 }
 
 - (id)initWithFrame:(CGRect)frame
@@ -90,7 +87,6 @@ CGFloat const SDTimeIndicatorMargin = 10.0f;
 {
     [super layoutSubviews];
     
-    _activityIndicatorView.hidden = !_isManuallyRefreshing;
     _activityIndicatorView.center = CGPointMake(SDActivityIndicatorViewMargin, self.sd_height * 0.5);
     _stateIndicatorView.center = _activityIndicatorView.center;
     

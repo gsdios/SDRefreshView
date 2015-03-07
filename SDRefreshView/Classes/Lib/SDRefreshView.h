@@ -63,7 +63,12 @@ typedef enum {
 
 @property (nonatomic, assign) CGFloat stateIndicatorViewNormalTransformAngle;
 @property (nonatomic, assign) CGFloat stateIndicatorViewWillRefreshStateTransformAngle;
-@property (nonatomic, assign) BOOL isManuallyRefreshing;
+
+// 记录原始contentEdgeInsets
+@property (nonatomic, assign) UIEdgeInsets originalEdgeInsets;
+// 加载指示器
+@property (nonatomic, weak) UIActivityIndicatorView *activityIndicatorView;
+
 
 - (UIEdgeInsets)syntheticalEdgeInsetsWithEdgeInsets:(UIEdgeInsets)edgeInsets;
 

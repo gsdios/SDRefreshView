@@ -42,6 +42,7 @@
 {
     [super layoutSubviews];
     
+    self.activityIndicatorView.hidden = YES;
     _originalScrollViewContentHeight = self.scrollView.contentSize.height;
     self.scrollViewEdgeInsets = UIEdgeInsetsMake(0, 0, self.sd_height, 0);
     self.center = CGPointMake(self.scrollView.sd_width * 0.5, self.scrollView.contentSize.height + self.sd_height * 0.5 + self.scrollView.contentInset.bottom);

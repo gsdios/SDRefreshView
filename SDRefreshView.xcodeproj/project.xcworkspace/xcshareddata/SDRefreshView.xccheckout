@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>IDESourceControlProjectFavoriteDictionaryKey</key>
+	<false/>
+	<key>IDESourceControlProjectIdentifier</key>
+	<string>18D5B940-A0F1-454A-B404-C1E4319D3BFD</string>
+	<key>IDESourceControlProjectName</key>
+	<string>SDRefreshView</string>
+	<key>IDESourceControlProjectOriginsDictionary</key>
+	<dict>
+		<key>D2AC64603137AAF82DE334A615FFC6B66238791A</key>
+		<string>https://github.com/gsdios/SDRefreshView.git</string>
+	</dict>
+	<key>IDESourceControlProjectPath</key>
+	<string>SDRefreshView.xcodeproj</string>
+	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
+	<dict>
+		<key>D2AC64603137AAF82DE334A615FFC6B66238791A</key>
+		<string>../..</string>
+	</dict>
+	<key>IDESourceControlProjectURL</key>
+	<string>https://github.com/gsdios/SDRefreshView.git</string>
+	<key>IDESourceControlProjectVersion</key>
+	<integer>111</integer>
+	<key>IDESourceControlProjectWCCIdentifier</key>
+	<string>D2AC64603137AAF82DE334A615FFC6B66238791A</string>
+	<key>IDESourceControlProjectWCConfigurations</key>
+	<array>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>D2AC64603137AAF82DE334A615FFC6B66238791A</string>
+			<key>IDESourceControlWCCName</key>
+			<string>SDRefreshView</string>
+		</dict>
+	</array>
+</dict>
+</plist>

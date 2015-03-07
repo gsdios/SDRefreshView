@@ -23,6 +23,9 @@
 #import "UIView+SDExtension.h"
 
 @implementation SDRefreshHeaderView
+{
+    BOOL _isManuallyRefreshing;
+}
 
 - (id)initWithFrame:(CGRect)frame
 {
@@ -39,7 +42,7 @@
 - (CGFloat)yOfCenterPoint
 {
     if (self.isEffectedByNavigationController && SDRefreshViewMethodIOS7) {
-        return - (self.sd_height * 0.5 + self.scrollView.contentInset.top - SDKNavigationBarHeight);
+        return - (self.sd_height * 0.5 + self.originalEdgeInsets.top - SDKNavigationBarHeight);
     }
     
     return - (self.sd_height * 0.5 + self.scrollView.contentInset.top);
@@ -58,15 +61,15 @@
     self.center = CGPointMake(self.scrollView.sd_width * 0.5, [self yOfCenterPoint]);
     
     // 手动刷新
-    if (self.isManuallyRefreshing) {
+    if (_isManuallyRefreshing) {
         [self setRefreshState:SDRefreshViewStateRefreshing];
-        self.isManuallyRefreshing = NO;
+        _isManuallyRefreshing = NO;
     }
 }
 
 - (void)beginRefreshing
 {
-    self.isManuallyRefreshing = YES;
+    _isManuallyRefreshing = YES;
 }
 
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
