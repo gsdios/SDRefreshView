@@ -62,7 +62,14 @@
     
     // 手动刷新
     if (_isManuallyRefreshing) {
-        [self setRefreshState:SDRefreshViewStateRefreshing];
+        
+        // 模拟下拉操作
+        CGPoint temp = self.scrollView.contentOffset;
+        temp.y -= self.sd_height * 2;
+        self.scrollView.contentOffset = temp; // 触发准备刷新
+        temp.y += self.sd_height;
+        self.scrollView.contentOffset = temp; // 触发刷新
+        
         _isManuallyRefreshing = NO;
     }
 }
