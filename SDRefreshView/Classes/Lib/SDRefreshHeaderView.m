@@ -24,7 +24,7 @@
 
 @implementation SDRefreshHeaderView
 {
-    BOOL _isManuallyRefreshing;
+    BOOL _hasLayoutedForManuallyRefreshing;
 }
 
 - (id)initWithFrame:(CGRect)frame
@@ -41,11 +41,10 @@
 
 - (CGFloat)yOfCenterPoint
 {
-    if (self.isEffectedByNavigationController && SDRefreshViewMethodIOS7) {
-        return - (self.sd_height * 0.5 + self.originalEdgeInsets.top - SDKNavigationBarHeight);
-    }
-    
-    return - (self.sd_height * 0.5 + self.scrollView.contentInset.top);
+    //    if (self.isManuallyRefreshing && self.isEffectedByNavigationController && SDRefreshViewMethodIOS7) {
+    //        return - (self.sd_height * 0.5 + self.originalEdgeInsets.top - SDKNavigationBarHeight);
+    //    }
+    return - (self.sd_height * 0.5);
 }
 
 - (void)didMoveToSuperview
@@ -61,7 +60,7 @@
     self.center = CGPointMake(self.scrollView.sd_width * 0.5, [self yOfCenterPoint]);
     
     // 手动刷新
-    if (_isManuallyRefreshing) {
+    if (self.isManuallyRefreshing && !_hasLayoutedForManuallyRefreshing && self.scrollView.contentInset.top > 0) {
         self.activityIndicatorView.hidden = NO;
         
         // 模拟下拉操作
@@ -71,13 +70,15 @@
         temp.y += self.sd_height;
         self.scrollView.contentOffset = temp; // 触发刷新
         
-        _isManuallyRefreshing = NO;
+        _hasLayoutedForManuallyRefreshing = YES;
+    } else {
+        self.activityIndicatorView.hidden = !self.isManuallyRefreshing;
     }
 }
 
 - (void)beginRefreshing
 {
-    _isManuallyRefreshing = YES;
+    self.isManuallyRefreshing = YES;
 }
 
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context

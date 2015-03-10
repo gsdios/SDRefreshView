@@ -68,7 +68,7 @@ typedef enum {
 @property (nonatomic, assign) UIEdgeInsets originalEdgeInsets;
 // 加载指示器
 @property (nonatomic, weak) UIActivityIndicatorView *activityIndicatorView;
-
+@property (nonatomic, assign) BOOL isManuallyRefreshing;
 
 - (UIEdgeInsets)syntheticalEdgeInsetsWithEdgeInsets:(UIEdgeInsets)edgeInsets;
 

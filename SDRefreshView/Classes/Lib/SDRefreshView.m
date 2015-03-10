@@ -86,7 +86,7 @@ CGFloat const SDTimeIndicatorMargin = 10.0f;
 - (void)layoutSubviews
 {
     [super layoutSubviews];
-
+    
     _activityIndicatorView.center = CGPointMake(SDActivityIndicatorViewMargin, self.sd_height * 0.5);
     _stateIndicatorView.center = _activityIndicatorView.center;
     
@@ -138,39 +138,39 @@ CGFloat const SDTimeIndicatorMargin = 10.0f;
     _refreshState = refreshState;
     
     switch (refreshState) {
-        // 进入刷新状态
+            // 进入刷新状态
         case SDRefreshViewStateRefreshing:
-            {
-                _originalEdgeInsets = self.scrollView.contentInset;
-
-                _scrollView.contentInset = [self syntheticalEdgeInsetsWithEdgeInsets:self.scrollViewEdgeInsets];
-
-                _stateIndicatorView.hidden = YES;
-                _activityIndicatorView.hidden = NO;
-                _lastRefreshingTimeString = [self refreshingTimeString];
-                _textIndicator.text = SDRefreshViewRefreshingStateText;
-                
-                if (self.beginRefreshingOperation) {
-                    self.beginRefreshingOperation();
-                } else if (self.beginRefreshingTarget) {
-                    if ([self.beginRefreshingTarget respondsToSelector:self.beginRefreshingAction]) {
-                        
-// 屏蔽performSelector-leak警告
+        {
+            _originalEdgeInsets = self.scrollView.contentInset;
+            
+            _scrollView.contentInset = [self syntheticalEdgeInsetsWithEdgeInsets:self.scrollViewEdgeInsets];
+            
+            _stateIndicatorView.hidden = YES;
+            _activityIndicatorView.hidden = NO;
+            _lastRefreshingTimeString = [self refreshingTimeString];
+            _textIndicator.text = SDRefreshViewRefreshingStateText;
+            
+            if (self.beginRefreshingOperation) {
+                self.beginRefreshingOperation();
+            } else if (self.beginRefreshingTarget) {
+                if ([self.beginRefreshingTarget respondsToSelector:self.beginRefreshingAction]) {
+                    
+                    // 屏蔽performSelector-leak警告
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Warc-performSelector-leaks"
-                        [self.beginRefreshingTarget performSelector:self.beginRefreshingAction];
-                    }
+                    [self.beginRefreshingTarget performSelector:self.beginRefreshingAction];
                 }
             }
+        }
             break;
             
         case SDRefreshViewStateWillRefresh:
-            {
-                _textIndicator.text = SDRefreshViewWillRefreshStateText;
-                [UIView animateWithDuration:0.5 animations:^{
-                    _stateIndicatorView.transform = CGAffineTransformMakeRotation(self.stateIndicatorViewWillRefreshStateTransformAngle);
-                }];
-            }
+        {
+            _textIndicator.text = SDRefreshViewWillRefreshStateText;
+            [UIView animateWithDuration:0.5 animations:^{
+                _stateIndicatorView.transform = CGAffineTransformMakeRotation(self.stateIndicatorViewWillRefreshStateTransformAngle);
+            }];
+        }
             break;
             
         case SDRefreshViewStateNormal:
@@ -193,6 +193,9 @@ CGFloat const SDTimeIndicatorMargin = 10.0f;
         _scrollView.contentInset = _originalEdgeInsets;
     } completion:^(BOOL finished) {
         [self setRefreshState:SDRefreshViewStateNormal];
+        if (self.isManuallyRefreshing) {
+            self.isManuallyRefreshing = NO;
+        }
     }];
 }
 
