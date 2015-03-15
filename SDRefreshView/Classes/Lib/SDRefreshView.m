@@ -145,6 +145,7 @@ CGFloat const SDTimeIndicatorMargin = 10.0f;
             
             _scrollView.contentInset = [self syntheticalEdgeInsetsWithEdgeInsets:self.scrollViewEdgeInsets];
             
+            [_activityIndicatorView startAnimating];
             _stateIndicatorView.hidden = YES;
             _activityIndicatorView.hidden = NO;
             _lastRefreshingTimeString = [self refreshingTimeString];
@@ -178,6 +179,7 @@ CGFloat const SDTimeIndicatorMargin = 10.0f;
             _stateIndicatorView.transform = CGAffineTransformMakeRotation(self.stateIndicatorViewNormalTransformAngle);
             _timeIndicator.text = [NSString stringWithFormat:@"最后更新：%@", [self lastRefreshingTimeString]];
             _stateIndicatorView.hidden = NO;
+            [_activityIndicatorView stopAnimating];
             _activityIndicatorView.hidden = YES;
             break;
             
