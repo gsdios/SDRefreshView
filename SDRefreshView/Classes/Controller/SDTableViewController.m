@@ -110,13 +110,13 @@
         }
         
         self.animationView.transform = CGAffineTransformConcat(CGAffineTransformMakeTranslation(progress * 10, -20 * progress), CGAffineTransformMakeScale(progress, progress));
-        self.boxView.transform = CGAffineTransformMakeTranslation(- progress * 90, progress * 35);
+        self.boxView.transform = CGAffineTransformMakeTranslation(- progress * 85, progress * 35);
     };
     
     // willRefresh状态执行的操作
     refreshHeader.willRefreshStateOperationBlock = ^(SDRefreshView *refreshView, CGFloat progress){
         _boxView.hidden = YES;
-        _label.text = @"放开我，我要为你加载数据";
+        _label.text = @"放开我，我才帮你加载数据";
         _animationView.transform = CGAffineTransformConcat(CGAffineTransformMakeTranslation(10, -20), CGAffineTransformMakeScale(1, 1));
         NSArray *images = @[[UIImage imageNamed:@"deliveryStaff0"],
                             [UIImage imageNamed:@"deliveryStaff1"],
@@ -129,7 +129,7 @@
     
     // refreshing状态执行的操作
     refreshHeader.refreshingStateOperationBlock = ^(SDRefreshView *refreshView, CGFloat progress){
-        _label.text = @"客观别急，正在加载数据...";
+        _label.text = @"客官别急，正在加载数据...";
         [UIView animateWithDuration:1.5 animations:^{
             self.animationView.transform = CGAffineTransformMakeTranslation(200, -20);
         }];
