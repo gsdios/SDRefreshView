@@ -25,6 +25,16 @@ typedef enum {
     SDRefreshViewStateNormal
 } SDRefreshViewState;
 
+typedef enum {
+    SDRefreshViewStyleClassical,
+    SDRefreshViewStyleCustom
+} SDRefreshViewStyle;
+
+@class SDRefreshView;
+
+typedef void (^RefreshViewOperationBlock)(SDRefreshView *refreshView, CGFloat progress);
+
+
 #define SDRefreshViewMethodIOS7 ([[UIDevice currentDevice].systemVersion floatValue] >= 7.0)
 #define SDRefreshViewObservingkeyPath @"contentOffset"
 #define SDKNavigationBarHeight 64
@@ -46,13 +56,23 @@ typedef enum {
 @property (nonatomic, assign) BOOL isEffectedByNavigationController;
 
 + (instancetype)refreshView;
++ (instancetype)refreshViewWithStyle:(SDRefreshViewStyle)refreshViewStayle;
 
 - (void)addToScrollView:(UIScrollView *)scrollView;
 - (void)addToScrollView:(UIScrollView *)scrollView isEffectedByNavigationController:(BOOL)effectedByNavigationController;
-
 - (void)addTarget:(id)target refreshAction:(SEL)action;
 - (void)endRefreshing;
 
+// 支持高度自定义操作的block，需要自定义刷新动画时使用,只需将对应操作加入对应的block即可
+@property (nonatomic, copy) RefreshViewOperationBlock normalStateOperationBlock;
+@property (nonatomic, copy) RefreshViewOperationBlock willRefreshStateOperationBlock;
+@property (nonatomic, copy) RefreshViewOperationBlock refreshingStateOperationBlock;
+
+
+
+
+
+// --------------------------- 以下时为此类的子类开放的接口 ---------------------------
 
 @property (nonatomic, weak) UIScrollView *scrollView;
 @property (nonatomic, assign) SDRefreshViewState refreshState;
@@ -62,14 +82,19 @@ typedef enum {
 @property (nonatomic, assign) UIEdgeInsets scrollViewEdgeInsets;
 
 @property (nonatomic, assign) CGFloat stateIndicatorViewNormalTransformAngle;
+
 @property (nonatomic, assign) CGFloat stateIndicatorViewWillRefreshStateTransformAngle;
 
-// 记录原始contentEdgeInsets
+// --记录原始contentEdgeInsets
 @property (nonatomic, assign) UIEdgeInsets originalEdgeInsets;
-// 加载指示器
+
+// --加载指示器
 @property (nonatomic, weak) UIActivityIndicatorView *activityIndicatorView;
+
 @property (nonatomic, assign) BOOL isManuallyRefreshing;
 
+
 - (UIEdgeInsets)syntheticalEdgeInsetsWithEdgeInsets:(UIEdgeInsets)edgeInsets;
+
 
 @end
