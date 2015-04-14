@@ -86,17 +86,18 @@
     if (![keyPath isEqualToString:SDRefreshViewObservingkeyPath]) return;
     
     CGFloat y = [change[@"new"] CGPointValue].y;
+    CGFloat criticalY = -self.sd_height - self.scrollView.contentInset.top;
     
     // 只有在 y<=0 以及 scrollview的高度不为0 时才判断
     if ((y > 0) || (self.scrollView.bounds.size.height == 0)) return;
     
     // 触发SDRefreshViewStateRefreshing状态
-    if (y >= (-self.sd_height - self.scrollView.contentInset.top) && (self.refreshState == SDRefreshViewStateWillRefresh)) {
+    if (y >= criticalY && (self.refreshState == SDRefreshViewStateWillRefresh)) {
         [self setRefreshState:SDRefreshViewStateRefreshing];
     }
     
     // 触发SDRefreshViewStateWillRefresh状态
-    if (y < (-self.sd_height - self.scrollView.contentInset.top) && (SDRefreshViewStateNormal == self.refreshState)) {
+    if (y < criticalY && (SDRefreshViewStateNormal == self.refreshState)) {
         [self setRefreshState:SDRefreshViewStateWillRefresh];
     }
 }
