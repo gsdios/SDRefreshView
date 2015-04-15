@@ -25,4 +25,6 @@
   3. 默认是在navigationController环境下，如果不是在此环境下，请设置 refreshHeader.isEffectedByNavigationController = NO;
    
 
-    
+![](http://cc.cocimg.com/bbs/attachment/Fid_19/19_441660_3546442c2f2486c.gif)
+仿京东动画刷新版本
+https://github.com/gsdios/SDRefreshView/tree/%E4%BB%BF%E4%BA%AC%E4%B8%9C%E4%B8%8B%E6%8B%89%E5%88%B7%E6%96%B0%EF%BC%88%E5%BC%80%E6%94%BE%E6%8E%A5%E5%8F%A3%E5%8F%AF%E8%87%AA%E5%AE%9A%E4%B9%89%E5%8A%A8%E7%94%BB%EF%BC%89
