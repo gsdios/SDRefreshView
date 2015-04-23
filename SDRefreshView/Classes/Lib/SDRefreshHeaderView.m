@@ -96,11 +96,11 @@
     // 触发SDRefreshViewStateWillRefresh状态
     if (y < criticalY && (SDRefreshViewStateNormal == self.refreshState)) {
         [self setRefreshState:SDRefreshViewStateWillRefresh];
-    } else if (y >= criticalY && self.scrollView.isDragging) {
+    } else if (y >= criticalY && self.scrollView.isDragging && self.refreshState != SDRefreshViewStateNormal) {
         self.refreshState = SDRefreshViewStateNormal;
     }
     
-    if (self.refreshState == SDRefreshViewStateNormal && self.scrollView.dragging) {
+    if (self.refreshState == SDRefreshViewStateNormal) {
         CGFloat scale = (-y - self.scrollView.contentInset.top) / self.sd_height;
         if (self.normalStateOperationBlock) {
             self.normalStateOperationBlock(self, scale);
