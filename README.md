@@ -13,19 +13,24 @@
 2.创建并设置 （只需3步）
     
     （1）SDRefreshHeaderView *refreshHeader = [SDRefreshHeaderView refreshViewWithStyle:SDRefreshViewStyleCustom];
+
     
-     (2)
+     (2)实现自定义动画代理
+
      // normal状态执行的操作
-     refreshHeader.normalStateOperationBlock = ^(SDRefreshView *refreshView, CGFloat progress){
-     };
-    
+     - (void)refreshView:(SDRefreshView *)refreshView didBecomeNormalStateWithMovingProgress:(CGFloat)progress
+     {
+     }
+
      // willRefresh状态执行的操作
-     refreshHeader.willRefreshStateOperationBlock = ^(SDRefreshView *refreshView, CGFloat progress){
-     };
-    
+     - (void)refreshView:(SDRefreshView *)refreshView didBecomeWillRefreshStateWithMovingProgress:(CGFloat)progress
+     {
+     }
+
      // refreshing状态执行的操作
-     refreshHeader.refreshingStateOperationBlock = ^(SDRefreshView *refreshView, CGFloat progress){
-     };
+     - (void)refreshView:(SDRefreshView *)refreshView didBecomeRefreshingStateWithMovingProgress:(CGFloat)progress
+     {
+     }
      
      （因为此版为完全开放接口版本，所有动画设置均由使用此框架者完成，如需把demo效果完全复制到你的项目中，请把demo中此三个block里面的代码一起复制过去）
 
