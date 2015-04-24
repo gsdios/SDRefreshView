@@ -22,7 +22,7 @@
 #import "SDTableViewController.h"
 #import "SDRefresh.h"
 
-@interface SDTableViewController ()
+@interface SDTableViewController () <SDRefreshViewAnimationDelegate>
 
 @property (nonatomic, weak) SDRefreshFooterView *refreshFooter;
 @property (nonatomic, weak) SDRefreshHeaderView *refreshHeader;
@@ -64,6 +64,8 @@
 {
     SDRefreshHeaderView *refreshHeader = [SDRefreshHeaderView refreshViewWithStyle:SDRefreshViewStyleCustom];
     
+    refreshHeader.delegate = self;
+    
     // 默认是在navigationController环境下，如果不是在此环境下，请设置 refreshHeader.isEffectedByNavigationController = NO;
     [refreshHeader addToScrollView:self.tableView];
     _refreshHeader = refreshHeader;
@@ -84,6 +86,14 @@
     [refreshHeader addSubview:animationView];
     _animationView = animationView;
     
+    NSArray *images = @[[UIImage imageNamed:@"deliveryStaff0"],
+                        [UIImage imageNamed:@"deliveryStaff1"],
+                        [UIImage imageNamed:@"deliveryStaff2"],
+                        [UIImage imageNamed:@"deliveryStaff3"]
+                        ];
+    _animationView.animationImages = images;
+    
+    
     UIImageView *boxView = [[UIImageView alloc] init];
     boxView.frame = CGRectMake(150, 10, 15, 8);
     boxView.image = [UIImage imageNamed:@"box"];
@@ -98,42 +108,6 @@
     label.textAlignment = NSTextAlignmentCenter;
     [refreshHeader addSubview:label];
     _label = label;
-    
-    // normal状态执行的操作
-    refreshHeader.normalStateOperationBlock = ^(SDRefreshView *refreshView, CGFloat progress){
-        refreshView.hidden = NO;
-        if (progress == 0) {
-            _animationView.transform = CGAffineTransformMakeScale(0.1, 0.1);
-            _boxView.hidden = NO;
-            _label.text = @"下拉加载最新数据";
-            [_animationView stopAnimating];
-        }
-        
-        self.animationView.transform = CGAffineTransformConcat(CGAffineTransformMakeTranslation(progress * 10, -20 * progress), CGAffineTransformMakeScale(progress, progress));
-        self.boxView.transform = CGAffineTransformMakeTranslation(- progress * 85, progress * 35);
-    };
-    
-    // willRefresh状态执行的操作
-    refreshHeader.willRefreshStateOperationBlock = ^(SDRefreshView *refreshView, CGFloat progress){
-        _boxView.hidden = YES;
-        _label.text = @"放开我，我才帮你加载数据";
-        _animationView.transform = CGAffineTransformConcat(CGAffineTransformMakeTranslation(10, -20), CGAffineTransformMakeScale(1, 1));
-        NSArray *images = @[[UIImage imageNamed:@"deliveryStaff0"],
-                            [UIImage imageNamed:@"deliveryStaff1"],
-                            [UIImage imageNamed:@"deliveryStaff2"],
-                            [UIImage imageNamed:@"deliveryStaff3"]
-                            ];
-        _animationView.animationImages = images;
-        [_animationView startAnimating];
-    };
-    
-    // refreshing状态执行的操作
-    refreshHeader.refreshingStateOperationBlock = ^(SDRefreshView *refreshView, CGFloat progress){
-        _label.text = @"客官别急，正在加载数据...";
-        [UIView animateWithDuration:1.5 animations:^{
-            self.animationView.transform = CGAffineTransformMakeTranslation(200, -20);
-        }];
-    };
     
     // 进入页面自动加载一次数据
     [refreshHeader beginRefreshing];
@@ -155,6 +129,39 @@
         [self.tableView reloadData];
         [self.refreshFooter endRefreshing];
     });
+}
+
+#pragma mark - SDRefreshView Animation Delegate
+
+- (void)refreshView:(SDRefreshView *)refreshView didBecomeNormalStateWithMovingProgress:(CGFloat)progress
+{
+    refreshView.hidden = NO;
+    if (progress == 0) {
+        _animationView.transform = CGAffineTransformMakeScale(0.1, 0.1);
+        _boxView.hidden = NO;
+        _label.text = @"下拉加载最新数据";
+        [_animationView stopAnimating];
+    }
+    
+    self.animationView.transform = CGAffineTransformConcat(CGAffineTransformMakeTranslation(progress * 10, -20 * progress), CGAffineTransformMakeScale(progress, progress));
+    self.boxView.transform = CGAffineTransformMakeTranslation(- progress * 85, progress * 35);
+    
+}
+
+- (void)refreshView:(SDRefreshView *)refreshView didBecomeRefreshingStateWithMovingProgress:(CGFloat)progress
+{
+    _label.text = @"客官别急，正在加载数据...";
+    [UIView animateWithDuration:1.5 animations:^{
+        self.animationView.transform = CGAffineTransformMakeTranslation(200, -20);
+    }];
+}
+
+- (void)refreshView:(SDRefreshView *)refreshView didBecomeWillRefreshStateWithMovingProgress:(CGFloat)progress
+{
+    _boxView.hidden = YES;
+    _label.text = @"放开我，我才帮你加载数据";
+    _animationView.transform = CGAffineTransformConcat(CGAffineTransformMakeTranslation(10, -20), CGAffineTransformMakeScale(1, 1));
+    [_animationView startAnimating];
 }
 
 #pragma mark - Tableview data source
@@ -192,3 +199,44 @@
 }
 
 @end
+
+ 
+ /**
+ // normal状态执行的操作
+ refreshHeader.normalStateOperationBlock = ^(SDRefreshView *refreshView, CGFloat progress){
+ refreshView.hidden = NO;
+ if (progress == 0) {
+ _animationView.transform = CGAffineTransformMakeScale(0.1, 0.1);
+ _boxView.hidden = NO;
+ _label.text = @"下拉加载最新数据";
+ [_animationView stopAnimating];
+ }
+ 
+ self.animationView.transform = CGAffineTransformConcat(CGAffineTransformMakeTranslation(progress * 10, -20 * progress), CGAffineTransformMakeScale(progress, progress));
+ self.boxView.transform = CGAffineTransformMakeTranslation(- progress * 85, progress * 35);
+ };
+ 
+ // willRefresh状态执行的操作
+ refreshHeader.willRefreshStateOperationBlock = ^(SDRefreshView *refreshView, CGFloat progress){
+ _boxView.hidden = YES;
+ _label.text = @"放开我，我才帮你加载数据";
+ _animationView.transform = CGAffineTransformConcat(CGAffineTransformMakeTranslation(10, -20), CGAffineTransformMakeScale(1, 1));
+ NSArray *images = @[[UIImage imageNamed:@"deliveryStaff0"],
+ [UIImage imageNamed:@"deliveryStaff1"],
+ [UIImage imageNamed:@"deliveryStaff2"],
+ [UIImage imageNamed:@"deliveryStaff3"]
+ ];
+ _animationView.animationImages = images;
+ [_animationView startAnimating];
+ };
+ 
+ // refreshing状态执行的操作
+ refreshHeader.refreshingStateOperationBlock = ^(SDRefreshView *refreshView, CGFloat progress){
+ _label.text = @"客官别急，正在加载数据...";
+ [UIView animateWithDuration:1.5 animations:^{
+ self.animationView.transform = CGAffineTransformMakeTranslation(200, -20);
+ }];
+ };
+ */
+
+

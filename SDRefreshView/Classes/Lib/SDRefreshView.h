@@ -48,12 +48,23 @@ typedef void (^RefreshViewOperationBlock)(SDRefreshView *refreshView, CGFloat pr
 
 // ---------------------------配置----------------------------------
 
+@protocol SDRefreshViewAnimationDelegate <NSObject>
+
+- (void)refreshView:(SDRefreshView *)refreshView didBecomeNormalStateWithMovingProgress:(CGFloat)progress;
+- (void)refreshView:(SDRefreshView *)refreshView didBecomeWillRefreshStateWithMovingProgress:(CGFloat)progress;
+- (void)refreshView:(SDRefreshView *)refreshView didBecomeRefreshingStateWithMovingProgress:(CGFloat)progress;
+
+@end
+
+
+
 @interface SDRefreshView : UIView
 
 @property (nonatomic, copy) void(^beginRefreshingOperation)();
 @property (nonatomic, weak) id beginRefreshingTarget;
 @property (nonatomic, assign) SEL beginRefreshingAction;
 @property (nonatomic, assign) BOOL isEffectedByNavigationController;
+@property (nonatomic, weak) id<SDRefreshViewAnimationDelegate> delegate;
 
 + (instancetype)refreshView;
 + (instancetype)refreshViewWithStyle:(SDRefreshViewStyle)refreshViewStayle;
@@ -63,7 +74,7 @@ typedef void (^RefreshViewOperationBlock)(SDRefreshView *refreshView, CGFloat pr
 - (void)addTarget:(id)target refreshAction:(SEL)action;
 - (void)endRefreshing;
 
-// 支持高度自定义操作的block，需要自定义刷新动画时使用,只需将对应操作加入对应的block即可
+// 支持高度自定义操作的block，需要自定义刷新动画时使用,只需将对应操作加入对应的block即可，注意block的循环引用问题！！！
 @property (nonatomic, copy) RefreshViewOperationBlock normalStateOperationBlock;
 @property (nonatomic, copy) RefreshViewOperationBlock willRefreshStateOperationBlock;
 @property (nonatomic, copy) RefreshViewOperationBlock refreshingStateOperationBlock;

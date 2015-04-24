@@ -102,6 +102,11 @@
     
     if (self.refreshState == SDRefreshViewStateNormal) {
         CGFloat scale = (-y - self.scrollView.contentInset.top) / self.sd_height;
+        
+        if ([self.delegate respondsToSelector:@selector(refreshView:didBecomeNormalStateWithMovingProgress:)]) {
+            [self.delegate refreshView:self didBecomeNormalStateWithMovingProgress:scale];
+        }
+        
         if (self.normalStateOperationBlock) {
             self.normalStateOperationBlock(self, scale);
         }

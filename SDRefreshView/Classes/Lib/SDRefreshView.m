@@ -171,6 +171,10 @@ const CGFloat SDTimeIndicatorMargin = 10.0f;
                 self.refreshingStateOperationBlock(self, 1.0);
             }
             
+            if ([self.delegate respondsToSelector:@selector(refreshView:didBecomeRefreshingStateWithMovingProgress:)]) {
+                [self.delegate refreshView:self didBecomeRefreshingStateWithMovingProgress:1.0];
+            }
+            
             
             if (self.beginRefreshingOperation) {
                 self.beginRefreshingOperation();
@@ -189,6 +193,11 @@ const CGFloat SDTimeIndicatorMargin = 10.0f;
         case SDRefreshViewStateWillRefresh:
         {
             _textIndicator.text = SDRefreshViewWillRefreshStateText;
+            
+            if ([self.delegate respondsToSelector:@selector(refreshView:didBecomeWillRefreshStateWithMovingProgress:)]) {
+                [self.delegate refreshView:self didBecomeWillRefreshStateWithMovingProgress:1.0];
+            }
+            
             if (self.willRefreshStateOperationBlock) {
                 self.willRefreshStateOperationBlock(self, 1);
             }
@@ -199,6 +208,11 @@ const CGFloat SDTimeIndicatorMargin = 10.0f;
             break;
             
         case SDRefreshViewStateNormal:
+            
+            if ([self.delegate respondsToSelector:@selector(refreshView:didBecomeNormalStateWithMovingProgress:)]) {
+                [self.delegate refreshView:self didBecomeNormalStateWithMovingProgress:0];
+            }
+            
             if (self.normalStateOperationBlock) {
                 self.normalStateOperationBlock(self, 0);
             }
