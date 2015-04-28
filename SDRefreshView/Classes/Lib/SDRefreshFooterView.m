@@ -44,10 +44,15 @@
     
     self.activityIndicatorView.hidden = YES;
     _originalScrollViewContentHeight = self.scrollView.contentSize.height;
-    self.scrollViewEdgeInsets = UIEdgeInsetsMake(0, 0, self.sd_height, 0);
     self.center = CGPointMake(self.scrollView.sd_width * 0.5, self.scrollView.contentSize.height + self.sd_height * 0.5); // + self.scrollView.contentInset.bottom
     
     self.hidden = [self shouldHide];
+}
+
+- (void)didMoveToSuperview
+{
+    [super didMoveToSuperview];
+    self.scrollViewEdgeInsets = UIEdgeInsetsMake(0, 0, self.sd_height, 0);
 }
 
 - (BOOL)shouldHide
@@ -64,7 +69,7 @@
     if (![keyPath isEqualToString:SDRefreshViewObservingkeyPath]) return;
     
     CGFloat y = [change[@"new"] CGPointValue].y;
-    CGFloat criticalY = self.scrollView.contentSize.height - self.scrollView.sd_height + self.sd_height; //  + self.scrollView.contentInset.bottom
+    CGFloat criticalY = self.scrollView.contentSize.height - self.scrollView.sd_height + self.sd_height + self.scrollView.contentInset.bottom;
     
     // 只有在 y>0 以及 scrollview的高度不为0 时才判断
     if ((y <= 0) || (self.scrollView.bounds.size.height == 0)) return;
