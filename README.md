@@ -23,7 +23,9 @@
   1. 加载数据完成后调用 [refreshHeader endRefreshing];
   2. 如果需要一进入就自动加载一次数据，请调用[refreshHeader beginRefreshing];
   3. 默认是在navigationController环境下，如果不是在此环境下，请设置 refreshHeader.isEffectedByNavigationController = NO;
-
+  
+ 
+  
   4.最好可以在你的控制器销毁的时候做下刷新控件移除操作
     - (void)dealloc
     {
