@@ -25,6 +25,7 @@
 @interface SDTableViewController ()
 
 @property (nonatomic, weak) SDRefreshFooterView *refreshFooter;
+@property (nonatomic, weak) SDRefreshHeaderView *refreshHeader;
 @property (nonatomic, assign) NSInteger totalRowCount;
 
 @end
@@ -111,7 +112,7 @@
     }
     
     cell.backgroundColor = [self randomColor];
-    cell.textLabel.text = [NSString stringWithFormat:@"------第%d行--共%d行----", indexPath.row + 1, self.totalRowCount];
+    cell.textLabel.text = [NSString stringWithFormat:@"------第%ld行--共%ld行----", indexPath.row + 1, self.totalRowCount];
     
     return cell;
 }
@@ -123,6 +124,12 @@
     CGFloat b = arc4random_uniform(255);
     
     return [UIColor colorWithRed:(r / 255.0) green:(g / 255.0) blue:(b / 255.0) alpha:0.3f];
+}
+
+- (void)dealloc
+{
+    [self.refreshHeader removeFromSuperview];
+    [self.refreshFooter removeFromSuperview];
 }
 
 @end
