@@ -95,6 +95,13 @@ const CGFloat SDTimeIndicatorMargin = 10.0f;
     _refreshStyle = refreshStyle;
 }
 
+- (void)willMoveToSuperview:(UIView *)newSuperview
+{
+    if (!newSuperview) {
+        [_scrollView removeObserver:self forKeyPath:SDRefreshViewObservingkeyPath];
+    }
+}
+
 - (void)didMoveToSuperview
 {
     self.bounds = CGRectMake(0, 0, self.scrollView.frame.size.width, SDRefreshViewDefaultHeight);
