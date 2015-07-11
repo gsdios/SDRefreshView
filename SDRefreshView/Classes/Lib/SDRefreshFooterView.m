@@ -71,24 +71,32 @@
     CGFloat y = [change[@"new"] CGPointValue].y;
     CGFloat criticalY = self.scrollView.contentSize.height - self.scrollView.sd_height + self.sd_height + self.scrollView.contentInset.bottom;
     
+    // 如果scrollView内容有增减，重新调整refreshFooter位置
+    if (self.scrollView.contentSize.height != _originalScrollViewContentHeight) {
+        [self layoutSubviews];
+    }
+    
     // 只有在 y>0 以及 scrollview的高度不为0 时才判断
     if ((y <= 0) || (self.scrollView.bounds.size.height == 0)) return;
     
     // 触发SDRefreshViewStateRefreshing状态
-    if (y < criticalY && (self.refreshState == SDRefreshViewStateWillRefresh)) {
+    if (y <= criticalY && (self.refreshState == SDRefreshViewStateWillRefresh) && !self.scrollView.isDragging) {
         [self setRefreshState:SDRefreshViewStateRefreshing];
+        return;
     }
     
     // 触发SDRefreshViewStateWillRefresh状态
     if (y > criticalY && (SDRefreshViewStateNormal == self.refreshState)) {
         if (self.hidden) return;
         [self setRefreshState:SDRefreshViewStateWillRefresh];
+        return;
     }
     
-    // 如果scrollView内容有增减，重新调整refreshFooter位置
-    if (self.scrollView.contentSize.height != _originalScrollViewContentHeight) {
-        [self layoutSubviews];
+    if (y <= criticalY && self.scrollView.isDragging && (SDRefreshViewStateNormal != self.refreshState)) {
+        [self setRefreshState:SDRefreshViewStateNormal];
     }
+    
+
 }
 
 @end

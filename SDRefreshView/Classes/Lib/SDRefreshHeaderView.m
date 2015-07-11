@@ -92,13 +92,19 @@
     if ((y > 0) || (self.scrollView.bounds.size.height == 0)) return;
     
     // 触发SDRefreshViewStateRefreshing状态
-    if (y >= criticalY && (self.refreshState == SDRefreshViewStateWillRefresh)) {
+    if (y <= criticalY && (self.refreshState == SDRefreshViewStateWillRefresh) && !self.scrollView.isDragging) {
         [self setRefreshState:SDRefreshViewStateRefreshing];
+        return;
     }
     
     // 触发SDRefreshViewStateWillRefresh状态
     if (y < criticalY && (SDRefreshViewStateNormal == self.refreshState)) {
         [self setRefreshState:SDRefreshViewStateWillRefresh];
+        return;
+    }
+    
+    if (y > criticalY && self.scrollView.isDragging && (SDRefreshViewStateNormal != self.refreshState)) {
+        [self setRefreshState:SDRefreshViewStateNormal];
     }
 }
 

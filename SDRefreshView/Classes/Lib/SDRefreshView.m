@@ -80,13 +80,16 @@ CGFloat const SDTimeIndicatorMargin = 10.0f;
 
 - (void)willMoveToSuperview:(UIView *)newSuperview
 {
+    [super willMoveToSuperview:newSuperview];
+    
     if (!newSuperview) {
-        [_scrollView removeObserver:self forKeyPath:SDRefreshViewObservingkeyPath];
+        [self.superview removeObserver:self forKeyPath:SDRefreshViewObservingkeyPath];
     }
 }
 
 - (void)didMoveToSuperview
 {
+    [super didMoveToSuperview];
     self.bounds = CGRectMake(0, 0, self.scrollView.frame.size.width, SDRefreshViewDefaultHeight);
 }
 
@@ -182,12 +185,17 @@ CGFloat const SDTimeIndicatorMargin = 10.0f;
             break;
             
         case SDRefreshViewStateNormal:
+        {
+            [UIView animateWithDuration:0.5 animations:^{
+                _stateIndicatorView.transform = CGAffineTransformMakeRotation(self.stateIndicatorViewNormalTransformAngle);
+            }];
             _textIndicator.text = self.textForNormalState;
-            _stateIndicatorView.transform = CGAffineTransformMakeRotation(self.stateIndicatorViewNormalTransformAngle);
+            
             _timeIndicator.text = [NSString stringWithFormat:@"最后更新：%@", [self lastRefreshingTimeString]];
             _stateIndicatorView.hidden = NO;
             [_activityIndicatorView stopAnimating];
             _activityIndicatorView.hidden = YES;
+        }
             break;
             
         default:
