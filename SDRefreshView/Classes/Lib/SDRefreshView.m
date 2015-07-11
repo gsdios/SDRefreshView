@@ -223,9 +223,4 @@ CGFloat const SDTimeIndicatorMargin = 10.0f;
     ;
 }
 
-- (void)dealloc
-{
-    [_scrollView removeObserver:self forKeyPath:SDRefreshViewObservingkeyPath];
-}
-
 @end
