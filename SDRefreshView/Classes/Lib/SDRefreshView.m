@@ -31,6 +31,7 @@ CGFloat const SDTimeIndicatorMargin = 10.0f;
     UILabel *_textIndicator;
     UILabel *_timeIndicator;
     NSString *_lastRefreshingTimeString;
+    BOOL _hasSetOriginalInsets;
 }
 
 - (id)initWithFrame:(CGRect)frame
@@ -151,7 +152,10 @@ CGFloat const SDTimeIndicatorMargin = 10.0f;
             // 进入刷新状态
         case SDRefreshViewStateRefreshing:
         {
-            _originalEdgeInsets = self.scrollView.contentInset;
+            if (!_hasSetOriginalInsets) {
+                _originalEdgeInsets = self.scrollView.contentInset;
+                _hasSetOriginalInsets = YES;
+            }
             
             _scrollView.contentInset = [self syntheticalEdgeInsetsWithEdgeInsets:self.scrollViewEdgeInsets];
             

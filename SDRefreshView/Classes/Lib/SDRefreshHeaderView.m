@@ -83,7 +83,7 @@
 
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
 {
-    if (![keyPath isEqualToString:SDRefreshViewObservingkeyPath]) return;
+    if (![keyPath isEqualToString:SDRefreshViewObservingkeyPath] || self.refreshState == SDRefreshViewStateRefreshing) return;
     
     CGFloat y = [change[@"new"] CGPointValue].y;
     CGFloat criticalY = -self.sd_height - self.scrollView.contentInset.top;
