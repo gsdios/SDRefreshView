@@ -62,10 +62,11 @@
     [refreshHeader addToScrollView:self.tableView];
     
     __weak SDRefreshHeaderView *weakRefreshHeader = refreshHeader;
+    __weak typeof(self) weakSelf = self;
     refreshHeader.beginRefreshingOperation = ^{
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-            self.totalRowCount += 3;
-            [self.tableView reloadData];
+            weakSelf.totalRowCount += 3;
+            [weakSelf.tableView reloadData];
             [weakRefreshHeader endRefreshing];
         });
     };
@@ -117,6 +118,11 @@
     return cell;
 }
 
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    [self.navigationController pushViewController:[SDTableViewController new] animated:YES];
+}
+
 - (UIColor *)randomColor
 {
     CGFloat r = arc4random_uniform(255);
@@ -126,10 +132,5 @@
     return [UIColor colorWithRed:(r / 255.0) green:(g / 255.0) blue:(b / 255.0) alpha:0.3f];
 }
 
-- (void)dealloc
-{
-    [self.refreshHeader removeFromSuperview];
-    [self.refreshFooter removeFromSuperview];
-}
 
 @end
