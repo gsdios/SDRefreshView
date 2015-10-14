@@ -97,9 +97,7 @@ const CGFloat SDTimeIndicatorMargin = 10.0f;
 
 - (void)willMoveToSuperview:(UIView *)newSuperview
 {
-    if (!newSuperview) {
-        [_scrollView removeObserver:self forKeyPath:SDRefreshViewObservingkeyPath];
-    }
+    [self.superview removeObserver:self forKeyPath:SDRefreshViewObservingkeyPath];
 }
 
 - (void)didMoveToSuperview
@@ -272,11 +270,6 @@ const CGFloat SDTimeIndicatorMargin = 10.0f;
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
 {
     ;
-}
-
-- (void)dealloc
-{
-    [self.superview removeObserver:self forKeyPath:SDRefreshViewObservingkeyPath];
 }
 
 @end

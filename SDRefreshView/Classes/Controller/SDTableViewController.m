@@ -71,10 +71,11 @@
     _refreshHeader = refreshHeader;
     
     __weak SDRefreshHeaderView *weakRefreshHeader = refreshHeader;
+    __weak typeof(self) weakSelf = self;
     refreshHeader.beginRefreshingOperation = ^{
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-            self.totalRowCount += 3;
-            [self.tableView reloadData];
+            weakSelf.totalRowCount += 3;
+            [weakSelf.tableView reloadData];
             [weakRefreshHeader endRefreshing];
         });
     };
@@ -189,6 +190,11 @@
     return cell;
 }
 
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    [self.navigationController pushViewController:[SDTableViewController new] animated:YES];
+}
+
 - (UIColor *)randomColor
 {
     CGFloat r = arc4random_uniform(255);
@@ -199,44 +205,3 @@
 }
 
 @end
-
- 
- /**
- // normal状态执行的操作
- refreshHeader.normalStateOperationBlock = ^(SDRefreshView *refreshView, CGFloat progress){
- refreshView.hidden = NO;
- if (progress == 0) {
- _animationView.transform = CGAffineTransformMakeScale(0.1, 0.1);
- _boxView.hidden = NO;
- _label.text = @"下拉加载最新数据";
- [_animationView stopAnimating];
- }
- 
- self.animationView.transform = CGAffineTransformConcat(CGAffineTransformMakeTranslation(progress * 10, -20 * progress), CGAffineTransformMakeScale(progress, progress));
- self.boxView.transform = CGAffineTransformMakeTranslation(- progress * 85, progress * 35);
- };
- 
- // willRefresh状态执行的操作
- refreshHeader.willRefreshStateOperationBlock = ^(SDRefreshView *refreshView, CGFloat progress){
- _boxView.hidden = YES;
- _label.text = @"放开我，我才帮你加载数据";
- _animationView.transform = CGAffineTransformConcat(CGAffineTransformMakeTranslation(10, -20), CGAffineTransformMakeScale(1, 1));
- NSArray *images = @[[UIImage imageNamed:@"deliveryStaff0"],
- [UIImage imageNamed:@"deliveryStaff1"],
- [UIImage imageNamed:@"deliveryStaff2"],
- [UIImage imageNamed:@"deliveryStaff3"]
- ];
- _animationView.animationImages = images;
- [_animationView startAnimating];
- };
- 
- // refreshing状态执行的操作
- refreshHeader.refreshingStateOperationBlock = ^(SDRefreshView *refreshView, CGFloat progress){
- _label.text = @"客官别急，正在加载数据...";
- [UIView animateWithDuration:1.5 animations:^{
- self.animationView.transform = CGAffineTransformMakeTranslation(200, -20);
- }];
- };
- */
-
-
