@@ -111,7 +111,7 @@
     _label = label;
     
     // 进入页面自动加载一次数据
-    [refreshHeader beginRefreshing];
+    [refreshHeader autoRefreshWhenViewDidAppear];
 }
 
 - (void)setupFooter

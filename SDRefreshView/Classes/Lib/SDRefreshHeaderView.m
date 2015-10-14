@@ -73,7 +73,7 @@
     }
 }
 
-- (void)beginRefreshing
+- (void)autoRefreshWhenViewDidAppear
 {
     self.isManuallyRefreshing = YES;
 }
