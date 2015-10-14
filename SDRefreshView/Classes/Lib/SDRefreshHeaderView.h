@@ -10,6 +10,6 @@
 
 @interface SDRefreshHeaderView : SDRefreshView
 
-- (void)beginRefreshing;
+- (void)autoRefreshWhenViewDidAppear;
 
 @end
