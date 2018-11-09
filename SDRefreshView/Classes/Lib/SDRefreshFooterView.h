@@ -10,4 +10,6 @@
 
 @interface SDRefreshFooterView : SDRefreshView
 
+@property (nonatomic, assign) BOOL isAutoRefresh;
+
 @end

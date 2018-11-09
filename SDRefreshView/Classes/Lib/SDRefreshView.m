@@ -20,6 +20,11 @@
 #import "SDRefreshView.h"
 #import "UIView+SDExtension.h"
 
+// 进入刷新状态时的提示文字
+NSString * const SDRefreshViewRefreshingStateText = @"正在加载最新数据,请稍候";
+// 进入即将刷新状态时的提示文字
+NSString * const SDRefreshViewWillRefreshStateText = @"松开即可加载最新数据";
+
 CGFloat const SDRefreshViewDefaultHeight = 70.0f;
 CGFloat const SDActivityIndicatorViewMargin = 50.0f;
 CGFloat const SDTextIndicatorMargin = 20.0f;
@@ -70,6 +75,9 @@ CGFloat const SDTimeIndicatorMargin = 10.0f;
         timeIndicator.font = [UIFont systemFontOfSize:14];
         [self addSubview:timeIndicator];
         _timeIndicator = timeIndicator;
+        
+        _textForRefreshingState = SDRefreshViewRefreshingStateText;
+        _textForWillRefreshState = SDRefreshViewWillRefreshStateText;
     }
     return self;
 }
@@ -101,8 +109,12 @@ CGFloat const SDTimeIndicatorMargin = 10.0f;
     _activityIndicatorView.center = CGPointMake(SDActivityIndicatorViewMargin, self.sd_height * 0.5);
     _stateIndicatorView.center = _activityIndicatorView.center;
     
-    _textIndicator.center = CGPointMake(self.sd_width * 0.5, _activityIndicatorView.sd_height * 0.5 + SDTextIndicatorMargin);
-    _timeIndicator.center = CGPointMake(self.sd_width * 0.5, self.sd_height - _timeIndicator.sd_height * 0.5 - SDTimeIndicatorMargin);
+    if (_isHiddenTimeIndicator){
+        _textIndicator.center = CGPointMake(self.sd_width * 0.5, _activityIndicatorView.center.y);
+    }else{
+        _textIndicator.center = CGPointMake(self.sd_width * 0.5, _activityIndicatorView.sd_height * 0.5 + SDTextIndicatorMargin);
+        _timeIndicator.center = CGPointMake(self.sd_width * 0.5, self.sd_height - _timeIndicator.sd_height * 0.5 - SDTimeIndicatorMargin);
+    }
 }
 
 - (NSString *)lastRefreshingTimeString
@@ -144,6 +156,37 @@ CGFloat const SDTimeIndicatorMargin = 10.0f;
     return UIEdgeInsetsMake(_originalEdgeInsets.top + edgeInsets.top, _originalEdgeInsets.left + edgeInsets.left, _originalEdgeInsets.bottom + edgeInsets.bottom, _originalEdgeInsets.right + edgeInsets.right);
 }
 
+- (void)setIsHiddenTimeIndicator:(BOOL)isHiddenTimeIndicator
+{
+    _isHiddenTimeIndicator = isHiddenTimeIndicator;
+    [_timeIndicator setHidden:isHiddenTimeIndicator];
+}
+
+- (void)setTextFont:(UIFont *)textFont
+{
+    _textFont = textFont;
+    _textIndicator.font = textFont;
+    _timeIndicator.font = textFont;
+}
+
+- (void)setTextColor:(UIColor *)textColor
+{
+    _textColor = textColor;
+    _textIndicator.textColor = textColor;
+    _timeIndicator.textColor = textColor;
+}
+
+- (void)setStateImage:(UIImage *)stateImage
+{
+    _stateIndicatorView.image = stateImage;
+}
+
+- (void)setStateSize:(CGSize)stateSize
+{
+    _stateSize = stateSize;
+    _stateIndicatorView.bounds = CGRectMake(0, 0, stateSize.width, stateSize.height);
+}
+
 - (void)setRefreshState:(SDRefreshViewState)refreshState
 {
     _refreshState = refreshState;
@@ -163,7 +206,7 @@ CGFloat const SDTimeIndicatorMargin = 10.0f;
             _stateIndicatorView.hidden = YES;
             _activityIndicatorView.hidden = NO;
             _lastRefreshingTimeString = [self refreshingTimeString];
-            _textIndicator.text = SDRefreshViewRefreshingStateText;
+            _textIndicator.text = _textForRefreshingState;
             
             if (self.beginRefreshingOperation) {
                 self.beginRefreshingOperation();
@@ -181,9 +224,9 @@ CGFloat const SDTimeIndicatorMargin = 10.0f;
             
         case SDRefreshViewStateWillRefresh:
         {
-            _textIndicator.text = SDRefreshViewWillRefreshStateText;
+            _textIndicator.text = _textForWillRefreshState;
             [UIView animateWithDuration:0.5 animations:^{
-                _stateIndicatorView.transform = CGAffineTransformMakeRotation(self.stateIndicatorViewWillRefreshStateTransformAngle);
+                self->_stateIndicatorView.transform = CGAffineTransformMakeRotation(self.stateIndicatorViewWillRefreshStateTransformAngle);
             }];
         }
             break;
@@ -191,7 +234,7 @@ CGFloat const SDTimeIndicatorMargin = 10.0f;
         case SDRefreshViewStateNormal:
         {
             [UIView animateWithDuration:0.5 animations:^{
-                _stateIndicatorView.transform = CGAffineTransformMakeRotation(self.stateIndicatorViewNormalTransformAngle);
+                self->_stateIndicatorView.transform = CGAffineTransformMakeRotation(self.stateIndicatorViewNormalTransformAngle);
             }];
             _textIndicator.text = self.textForNormalState;
             
@@ -211,7 +254,7 @@ CGFloat const SDTimeIndicatorMargin = 10.0f;
 - (void)endRefreshing
 {
     [UIView animateWithDuration:0.6 animations:^{
-        _scrollView.contentInset = _originalEdgeInsets;
+        self->_scrollView.contentInset = self->_originalEdgeInsets;
     } completion:^(BOOL finished) {
         [self setRefreshState:SDRefreshViewStateNormal];
         if (self.isManuallyRefreshing) {
