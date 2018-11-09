@@ -242,6 +242,7 @@ CGFloat const SDTimeIndicatorMargin = 10.0f;
             _stateIndicatorView.hidden = NO;
             [_activityIndicatorView stopAnimating];
             _activityIndicatorView.hidden = YES;
+            _hasSetOriginalInsets = NO;
         }
             break;
             
@@ -253,14 +254,16 @@ CGFloat const SDTimeIndicatorMargin = 10.0f;
 
 - (void)endRefreshing
 {
-    [UIView animateWithDuration:0.6 animations:^{
-        self->_scrollView.contentInset = self->_originalEdgeInsets;
-    } completion:^(BOOL finished) {
-        [self setRefreshState:SDRefreshViewStateNormal];
-        if (self.isManuallyRefreshing) {
-            self.isManuallyRefreshing = NO;
-        }
-    }];
+    if (_hasSetOriginalInsets){
+        [UIView animateWithDuration:0.6 animations:^{
+            self->_scrollView.contentInset = self->_originalEdgeInsets;
+        } completion:^(BOOL finished) {
+            [self setRefreshState:SDRefreshViewStateNormal];
+            if (self.isManuallyRefreshing) {
+                self.isManuallyRefreshing = NO;
+            }
+        }];
+    }
 }
 
 // 更新时间
