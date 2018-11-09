@@ -63,13 +63,27 @@
     return (self.scrollView.bounds.size.height> self.sd_y); // + self.scrollView.contentInset.bottom
 }
 
+- (void)endRefreshing
+{
+    [UIView animateWithDuration:0.6 animations:^{
+        self.scrollView.contentInset = self.originalEdgeInsets;
+    } completion:^(BOOL finished) {
+        [self setRefreshState:SDRefreshViewStateNormal];
+        [self setHidden:true];
+        if (self.isManuallyRefreshing) {
+            self.isManuallyRefreshing = NO;
+        }
+    }];
+}
+
 
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
 {
     if (![keyPath isEqualToString:SDRefreshViewObservingkeyPath] || self.refreshState == SDRefreshViewStateRefreshing) return;
     
+    [self setHidden:false];
+    
     CGFloat y = [change[@"new"] CGPointValue].y;
-    CGFloat criticalY = self.scrollView.contentSize.height - self.scrollView.sd_height + self.sd_height + self.scrollView.contentInset.bottom;
     
     // 如果scrollView内容有增减，重新调整refreshFooter位置
     if (self.scrollView.contentSize.height != _originalScrollViewContentHeight) {
@@ -79,23 +93,37 @@
     // 只有在 y>0 以及 scrollview的高度不为0 时才判断
     if ((y <= 0) || (self.scrollView.bounds.size.height == 0)) return;
     
-    // 触发SDRefreshViewStateRefreshing状态
-    if (y <= criticalY && (self.refreshState == SDRefreshViewStateWillRefresh) && !self.scrollView.isDragging) {
-        [self setRefreshState:SDRefreshViewStateRefreshing];
-        return;
-    }
+    if (_isAutoRefresh){
+        
+        CGFloat criticalY = self.scrollView.contentSize.height - self.scrollView.sd_height - self.scrollView.contentInset.bottom;
+        
+        // 触发SDRefreshViewStateRefreshing状态
+        if (y >= criticalY && (self.refreshState == SDRefreshViewStateNormal) && !self.scrollView.isDragging) {
+            [self setRefreshState:SDRefreshViewStateRefreshing];
+            return;
+        }
+        
+    }else{
+        
+        CGFloat criticalY = self.scrollView.contentSize.height - self.scrollView.sd_height + self.sd_height + self.scrollView.contentInset.bottom;
     
-    // 触发SDRefreshViewStateWillRefresh状态
-    if (y > criticalY && (SDRefreshViewStateNormal == self.refreshState)) {
-        if (self.hidden) return;
-        [self setRefreshState:SDRefreshViewStateWillRefresh];
-        return;
+        // 触发SDRefreshViewStateRefreshing状态
+        if (y <= criticalY && (self.refreshState == SDRefreshViewStateWillRefresh) && !self.scrollView.isDragging) {
+            [self setRefreshState:SDRefreshViewStateRefreshing];
+            return;
+        }
+        
+        // 触发SDRefreshViewStateWillRefresh状态
+        if (y > criticalY && (SDRefreshViewStateNormal == self.refreshState)) {
+            if (self.hidden) return;
+            [self setRefreshState:SDRefreshViewStateWillRefresh];
+            return;
+        }
+        
+        if (y <= criticalY && self.scrollView.isDragging && (SDRefreshViewStateNormal != self.refreshState)) {
+            [self setRefreshState:SDRefreshViewStateNormal];
+        }
     }
-    
-    if (y <= criticalY && self.scrollView.isDragging && (SDRefreshViewStateNormal != self.refreshState)) {
-        [self setRefreshState:SDRefreshViewStateNormal];
-    }
-    
 
 }
 

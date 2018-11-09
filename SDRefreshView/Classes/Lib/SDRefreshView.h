@@ -29,18 +29,12 @@ typedef enum {
 #define SDRefreshViewObservingkeyPath @"contentOffset"
 #define SDKNavigationBarHeight 64
 
-// ---------------------------配置----------------------------------
-
-// 进入刷新状态时的提示文字
-#define SDRefreshViewRefreshingStateText @"正在加载最新数据,请稍候"
-// 进入即将刷新状态时的提示文字
-#define SDRefreshViewWillRefreshStateText @"松开即可加载最新数据"
 
 // ---------------------------配置----------------------------------
 
 @interface SDRefreshView : UIView
 
-@property (nonatomic, copy) void(^beginRefreshingOperation)();
+@property (nonatomic, copy) void(^beginRefreshingOperation)(void);
 @property (nonatomic, weak) id beginRefreshingTarget;
 @property (nonatomic, assign) SEL beginRefreshingAction;
 @property (nonatomic, assign) BOOL isEffectedByNavigationController;
@@ -57,6 +51,14 @@ typedef enum {
 @property (nonatomic, weak) UIScrollView *scrollView;
 @property (nonatomic, assign) SDRefreshViewState refreshState;
 @property (nonatomic, copy) NSString *textForNormalState;
+@property (nonatomic, copy) NSString *textForRefreshingState;
+@property (nonatomic, copy) NSString *textForWillRefreshState;
+@property (nonatomic, assign) BOOL isHiddenTimeIndicator;
+
+@property (nonatomic, assign) UIFont* textFont;
+@property (nonatomic, assign) UIColor* textColor;
+@property (nonatomic, copy) UIImage* stateImage;
+@property (nonatomic, assign) CGSize stateSize;
 
 // 子类自定义位置使用
 @property (nonatomic, assign) UIEdgeInsets scrollViewEdgeInsets;
